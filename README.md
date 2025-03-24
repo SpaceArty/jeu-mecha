@@ -1,2 +1,2 @@
 # jeu-mecha
-Le jeu mecha a nathan
+Complètement vide de description. Mais pas aussi vide que le trou que Nathan a laissé dans mon coeur après l'avoir brisé.
