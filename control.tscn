@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://2l6isa54inhe"]
+
+[ext_resource type="Texture2D" uid="uid://b6oqbxb40mkt5" path="res://image_2025-03-28_113454337-removebg-preview.png" id="2_62e2m"]
+[ext_resource type="Texture2D" uid="uid://dv2drxrpj524g" path="res://Screenshot 2025-03-28 114041.png" id="2_qtu10"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StaminaBar" type="TextureProgressBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1.0
+offset_right = 199.0
+offset_bottom = 128.0
+value = 100.0
+texture_under = ExtResource("2_62e2m")
+texture_progress = ExtResource("2_qtu10")
+texture_progress_offset = Vector2(19, 11)

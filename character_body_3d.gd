@@ -5,6 +5,11 @@ extends CharacterBody3D
 @export var gravity: float = 9.8
 @export var sensitivity: float = 0.002
 
+@export var stamina: float = 100.0  # Max stamina
+@export var stamina_regen_rate: float = 5.0  # Stamina regenerates per second
+@export var jump_stamina_cost: float = 20.0  # Stamina cost per jump
+
+@onready var stamina_bar = $"../Control/StaminaBar"  # Move up to World, then access Control
 @onready var head: Node3D = $Head
 @onready var first_person_camera: Camera3D = %CameraFPS
 @onready var third_person_camera: Camera3D = %CameraTPS
@@ -21,7 +26,7 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	update_camera_mode()
 	visual.position = Vector3(0, -1, 0)  # Adjust model position
-	visual.rotation_degrees.y = 180  # Rotate if needed
+	print("Stamina Bar:", stamina_bar)  # Debugging
 
 func _unhandled_input(event):
 	# Mouse look
@@ -39,7 +44,7 @@ func _unhandled_input(event):
 			# First-person: rotate whole character and head
 			rotate_y(-event.relative.x * sensitivity)
 			first_person_camera.rotate_x(-event.relative.y * sensitivity)
-			first_person_camera.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
+			first_person_camera.rotation.x = clamp(first_person_camera.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 	# Toggle between first-person and third-person
 	if event.is_action_pressed("toggle_camera"):
@@ -63,18 +68,29 @@ func _physics_process(delta):
 		if velocity_y < 0:  # Only reset velocity_y when falling
 			velocity_y = 0.0
 
+	stamina = min(stamina + stamina_regen_rate * delta, 100.0) # Stamina regen
+	stamina_bar.value = stamina  # Update UI to match stamina value
+
 	var input_dir = Vector3.ZERO
-	var forward = -global_transform.basis.z
-	var right = global_transform.basis.x
+	var move_forward: Vector3
+	var move_right: Vector3
+
+	# Use camera direction in third-person mode
+	if is_third_person:
+		move_forward = -camera_pivot.global_transform.basis.z
+		move_right = camera_pivot.global_transform.basis.x
+	else:
+		move_forward = -global_transform.basis.z
+		move_right = global_transform.basis.x
 
 	if Input.is_action_pressed("move_forward"):
-		input_dir += forward
+		input_dir += move_forward
 	if Input.is_action_pressed("move_backward"):
-		input_dir -= forward
+		input_dir -= move_forward
 	if Input.is_action_pressed("move_left"):
-		input_dir -= right
+		input_dir -= move_right
 	if Input.is_action_pressed("move_right"):
-		input_dir += right
+		input_dir += move_right
 
 	# Normalize input direction and apply speed
 	if input_dir != Vector3.ZERO:
@@ -87,8 +103,10 @@ func _physics_process(delta):
 	velocity.z = input_dir.z
 	velocity.y = velocity_y  # Vertical movement including gravity
 
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	# Jump logic with stamina check
+	if Input.is_action_just_pressed("jump") and is_on_floor() and stamina >= jump_stamina_cost:
 		velocity_y = jump_force  # Apply upward velocity when jumping
+		stamina -= jump_stamina_cost  # Reduce stamina
 
 	# Move the character and apply sliding
 	move_and_slide()

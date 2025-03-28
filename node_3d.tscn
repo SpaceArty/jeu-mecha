@@ -1,14 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://n6oycjbhvxt4"]
+[gd_scene load_steps=9 format=3 uid="uid://n6oycjbhvxt4"]
 
 [ext_resource type="PackedScene" uid="uid://ht3y04jyahq6" path="res://units/player/player.tscn" id="1_a202f"]
+[ext_resource type="Texture2D" uid="uid://c66a5hvhbf1sw" path="res://cricribg.jpg" id="2_a0tk4"]
+[ext_resource type="PackedScene" uid="uid://2l6isa54inhe" path="res://control.tscn" id="2_noarx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_noarx"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_a0tk4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_noarx"]
-sky_top_color = Color(0.701961, 0.478431, 0.309804, 1)
-sky_horizon_color = Color(0.929412, 0.47451, 0.278431, 1)
+sky_top_color = Color(0.94902, 0.780392, 0.466667, 1)
+sky_horizon_color = Color(1, 0.913725, 0.670588, 1)
+sky_cover = ExtResource("2_a0tk4")
 ground_bottom_color = Color(0.170219, 0.142756, 0.11086, 1)
 
 [sub_resource type="Sky" id="Sky_a0tk4"]
@@ -45,3 +48,5 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_r3fl7")
+
+[node name="Control" parent="." instance=ExtResource("2_noarx")]

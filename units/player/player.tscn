@@ -17,7 +17,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.678523, 0)
 
 [node name="CameraFPS" type="Camera3D" parent="Head"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.46306, -0.201727)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.46306, -0.200344)
 
 [node name="CameraPivotTPS" type="Node3D" parent="Head"]
 unique_name_in_owner = true
@@ -28,6 +28,7 @@ spring_length = 5.0
 
 [node name="CameraTPS" type="Camera3D" parent="Head/CameraPivotTPS/SpringArmTPS"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26602, 2.29736)
 
 [node name="Gundam" parent="." instance=ExtResource("2_6aur8")]
 unique_name_in_owner = true
