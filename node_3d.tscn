@@ -1,13 +1,25 @@
-[gd_scene load_steps=6 format=3 uid="uid://n6oycjbhvxt4"]
+[gd_scene load_steps=7 format=3 uid="uid://n6oycjbhvxt4"]
 
-[ext_resource type="Script" uid="uid://cynpc78ji1sgi" path="res://character_body_3d.gd" id="1_a202f"]
-[ext_resource type="PackedScene" uid="uid://c2f3q4u7wxj7h" path="res://character_model.tscn" id="2_noarx"]
+[ext_resource type="PackedScene" uid="uid://ht3y04jyahq6" path="res://units/player/player.tscn" id="1_a202f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_noarx"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_a0tk4"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_a0tk4"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_noarx"]
+sky_top_color = Color(0.701961, 0.478431, 0.309804, 1)
+sky_horizon_color = Color(0.929412, 0.47451, 0.278431, 1)
+ground_bottom_color = Color(0.170219, 0.142756, 0.11086, 1)
+
+[sub_resource type="Sky" id="Sky_a0tk4"]
+sky_material = SubResource("ProceduralSkyMaterial_noarx")
+
+[sub_resource type="Environment" id="Environment_r3fl7"]
+background_mode = 2
+sky = SubResource("Sky_a0tk4")
+ambient_light_sky_contribution = 0.7
+ssao_enabled = true
+glow_enabled = true
 
 [node name="World" type="Node3D"]
 
@@ -23,32 +35,13 @@ transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 mesh = SubResource("PlaneMesh_a0tk4")
 skeleton = NodePath("../..")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="Player" parent="." instance=ExtResource("1_a202f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.4034, 0)
-script = ExtResource("1_a202f")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.108309, 0)
-shape = SubResource("BoxShape3D_a0tk4")
-
-[node name="Head" type="Node3D" parent="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.678523, 0)
-
-[node name="CameraFPS" type="Camera3D" parent="CharacterBody3D/Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.46306, -0.201727)
-
-[node name="CameraPivot" type="Node3D" parent="CharacterBody3D/Head"]
-
-[node name="SpringArm3D" type="SpringArm3D" parent="CharacterBody3D/Head/CameraPivot"]
-spring_length = 5.0
-
-[node name="CameraTPS" type="Camera3D" parent="CharacterBody3D/Head/CameraPivot/SpringArm3D"]
-
-[node name="gundam" parent="CharacterBody3D" instance=ExtResource("2_noarx")]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.402028, -4.00234e-08, 0.915628, -0.915628, -1.75732e-08, 0.402028, 0, -1, -4.37114e-08, 30.4653, 26.3291, -0.508843)
-light_color = Color(1, 0.956863, 0.721569, 1)
 light_energy = 0.8
 shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_r3fl7")

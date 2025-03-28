@@ -1,18 +1,18 @@
 extends CharacterBody3D
 
 @export var speed: float = 5.0
-@export var jump_force: float = 5  # Increase jump force
+@export var jump_force: float = 5 
 @export var gravity: float = 9.8
-@export var sensitivity: float = 0.002  # Mouse sensitivity
+@export var sensitivity: float = 0.002
 
-@onready var head: Node3D = $Head  # Reference the Head node
-@onready var first_person_camera: Camera3D = $Head/CameraFPS
-@onready var third_person_camera: Camera3D = $Head/CameraPivot/SpringArm3D/CameraTPS
-@onready var spring_arm: SpringArm3D = $Head/CameraPivot/SpringArm3D
-@onready var camera_pivot: Node3D = $Head/CameraPivot  # The rotation point for third-person camera
-@onready var visual = $gundam  # 3D model
+@onready var head: Node3D = $Head
+@onready var first_person_camera: Camera3D = %CameraFPS
+@onready var third_person_camera: Camera3D = %CameraTPS
+@onready var spring_arm: SpringArm3D = %SpringArmTPS
+@onready var camera_pivot: Node3D = %CameraPivotTPS
+@onready var visual = %Gundam
 
-var is_third_person = false  # Default to first-person
+var is_third_person = false
 var velocity_y: float = 0.0  # Gravity
 var camera_rotation_x = 0.0  # Vertical rotation
 var camera_rotation_y = 0.0  # Horizontal rotation
@@ -38,8 +38,8 @@ func _unhandled_input(event):
 		else:
 			# First-person: rotate whole character and head
 			rotate_y(-event.relative.x * sensitivity)
-			head.rotate_x(-event.relative.y * sensitivity)
-			head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
+			first_person_camera.rotate_x(-event.relative.y * sensitivity)
+			first_person_camera.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 	# Toggle between first-person and third-person
 	if event.is_action_pressed("toggle_camera"):
@@ -54,20 +54,18 @@ func update_camera_mode():
 		first_person_camera.current = true
 		third_person_camera.current = false
 
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)  # Keep mouse captured
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _physics_process(delta):
-	# Apply gravity if not on the floor
 	if not is_on_floor():
 		velocity_y -= gravity * delta  # Gravity is applied when not on the floor
 	else:
 		if velocity_y < 0:  # Only reset velocity_y when falling
 			velocity_y = 0.0
 
-	# Movement input
 	var input_dir = Vector3.ZERO
-	var forward = -global_transform.basis.z  # Forward direction
-	var right = global_transform.basis.x  # Right direction
+	var forward = -global_transform.basis.z
+	var right = global_transform.basis.x
 
 	if Input.is_action_pressed("move_forward"):
 		input_dir += forward
@@ -89,7 +87,6 @@ func _physics_process(delta):
 	velocity.z = input_dir.z
 	velocity.y = velocity_y  # Vertical movement including gravity
 
-	# Jump logic (triggered when spacebar is pressed and on the floor)
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity_y = jump_force  # Apply upward velocity when jumping
 
